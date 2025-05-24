@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btnAddCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Category"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/purple_500"
+        android:layout_gravity="end"
+        android:layout_marginBottom="8dp"/>
+    <FrameLayout
+        android:id="@+id/addCategoryContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <GridView
+        android:id="@+id/gridCategories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:verticalSpacing="12dp"
+        android:horizontalSpacing="12dp"
+        android:numColumns="2"
+        android:paddingTop="8dp"
+        android:clipToPadding="false"
+        android:stretchMode="columnWidth"
+        android:gravity="center"/>
+
+</LinearLayout>
