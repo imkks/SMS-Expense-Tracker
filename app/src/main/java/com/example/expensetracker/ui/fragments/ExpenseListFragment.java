@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.Button;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -120,27 +122,26 @@ addMonth(view);
 
         return view;
     }
-    public void addMonth(View view)
-    {
-        LinearLayout chipContainer = view.findViewById(R.id.monthChipContainer);
-        ImageButton btnCalendar = view.findViewById(R.id.btnPickMonth);
-        LinearLayout monthChipSection = view.findViewById(R.id.monthChipSection);
+    public void addMonth(View view) {
+        ChipGroup chipContainer = view.findViewById(R.id.monthChipContainer);
+        View btnCalendar = view.findViewById(R.id.btnPickMonth);
+        View monthChipSection = view.findViewById(R.id.monthChipSection);
 
         btnCalendar.setOnClickListener(v -> {
             if (monthChipSection.getVisibility() == View.GONE) {
                 monthChipSection.setVisibility(View.VISIBLE);
                 monthChipSection.setAlpha(0f);
-                monthChipSection.animate().alpha(1f).setDuration(200).start(); // Fade in
+                monthChipSection.animate().alpha(1f).setDuration(200).start();
             } else {
                 monthChipSection.animate().alpha(0f).setDuration(200).withEndAction(() ->
-                        monthChipSection.setVisibility(View.GONE)).start(); // Fade out
+                        monthChipSection.setVisibility(View.GONE)).start();
             }
         });
+
         expenseViewModel.getAvailableMonths().observe(getViewLifecycleOwner(), monthList -> {
-            chipContainer.removeAllViews(); // clear old chips
+            chipContainer.removeAllViews();
             if (monthList == null || monthList.isEmpty()) return;
 
-            LayoutInflater inflater = LayoutInflater.from(getContext());
             SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
             SimpleDateFormat outFormat = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
 
@@ -154,45 +155,28 @@ addMonth(view);
                     display = ym;
                 }
 
-                TextView chip = new TextView(getContext());
+                Chip chip = new Chip(getContext());
                 chip.setText(display);
-                chip.setTag(ym); // store "2025-05" format
-                chip.setTextSize(14);
-                chip.setPadding(32, 16, 32, 16);
-                chip.setTextColor(Color.BLACK);
-                chip.setBackgroundResource(R.drawable.bg_chip_unselected);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(12, 0, 12, 0);
-                chip.setLayoutParams(params);
+                chip.setTag(ym);
+                chip.setCheckable(true);
 
                 chip.setOnClickListener(v -> {
-                    // Reset all chip styles
                     for (int j = 0; j < chipContainer.getChildCount(); j++) {
-                        View child = chipContainer.getChildAt(j);
-                        child.setBackgroundResource(R.drawable.bg_chip_unselected);
-                        ((TextView) child).setTextColor(Color.BLACK);
+                        Chip child = (Chip) chipContainer.getChildAt(j);
+                        child.setChecked(false);
                     }
-
-                    // Highlight selected
-                    chip.setBackgroundResource(R.drawable.bg_chip_selected);
-                    chip.setTextColor(Color.WHITE);
-
-                    // Update filter
+                    chip.setChecked(true);
                     String selectedYM = (String) v.getTag();
-                    tvSelectedMonth.setText(((TextView)v).getText());
-
+                    tvSelectedMonth.setText(((Chip) v).getText());
                     expenseViewModel.setMonth(selectedYM);
                 });
 
                 chipContainer.addView(chip);
 
-                // Auto-select first chip
                 if (i == 0) {
                     chip.performClick();
                 }
             }
         });
-
     }
 }

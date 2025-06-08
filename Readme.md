@@ -78,6 +78,7 @@ Ensure these are in your AndroidManifest.xml:
 
 <uses-permission android:name="android.permission.RECEIVE_SMS"/>
 <uses-permission android:name="android.permission.READ_SMS"/>
+
 ```
 ### 4. Build & Run
 You can run it on your device/emulator.
